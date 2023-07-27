@@ -1,10 +1,13 @@
-ThisBuild / organization := "Event Driven Architecture with DAPEX"
+ThisBuild / organization := "DAPEX"
 
-ThisBuild / version := "1.1.0"
+ThisBuild / version := "1.0.0"
 
 lazy val commonSettings = Seq(
   scalaVersion := "2.13.10",
   libraryDependencies ++= Dependencies.all,
+  resolvers += Resolver.githubPackages("TheDiscProg"),
+  githubOwner := "TheDiscProg",
+  githubRepository := "rabbitmq-tester",
   addCompilerPlugin(
     ("org.typelevel" %% "kind-projector" % "0.13.2").cross(CrossVersion.full)
   ),
@@ -50,7 +53,7 @@ lazy val root = (project in file("."))
   )
   .settings(
     commonSettings,
-    name := "dapex-template",
+    name := "rabbitmq-tester",
     Compile / doc / sources := Seq.empty,
     scalacOptions ++= Scalac.options,
     Compile / mainClass := Some("dapex.MainApp"),
@@ -69,5 +72,7 @@ lazy val root = (project in file("."))
   .aggregate(base, guardrail)
   .dependsOn(base % "test->test; compile->compile")
   .dependsOn(guardrail % "test->test; compile->compile")
-// Put here as repository tests hang
-parallelExecution := false
+
+addCommandAlias("clntst", ";clean;scalafmt;test:scalafmt;test;")
+addCommandAlias("cvrtst", ";clean;scalafmt;test:scalafmt;coverage;test;coverageReport;")
+
